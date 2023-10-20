@@ -3,11 +3,13 @@ package com.example.fittrack
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.fittrack.models.BodyPart
@@ -16,6 +18,7 @@ import com.example.fittrack.models.ExerciseType
 import com.example.fittrack.ui.theme.FittrackTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val exercises = createExercises()
@@ -26,8 +29,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ExerciseListScreen(exercises)
 
+                    MainScreen()
                 }
             }
         }
@@ -43,6 +46,7 @@ fun GreetingPreview() {
     }
 }
 
+//Created all of these exercises as dummy information
 fun createExercises(): MutableList<Exercise> {
     return mutableListOf<Exercise>().apply {
         // Legs
