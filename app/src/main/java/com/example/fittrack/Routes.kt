@@ -5,4 +5,6 @@ package com.example.fittrack
 sealed class Routes(val route: String){
 
     object ExerciseListScreen: Routes("exerciselist")
+    object ProgressScreen: Routes("progress")
+    object WorkoutPlanScreen: Routes("workoutplan")
 }

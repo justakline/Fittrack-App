@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 //import androidx.compose.foundation.layout.ColumnScopeInstance.weight
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 
@@ -23,8 +24,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -150,15 +153,33 @@ fun ExerciseCard(exerciseName:String, bodyPart: String, exerciseType:String){
         //Separates the Card into a title, and then the categories on the bottem
         Column (modifier = Modifier
             .padding(10.dp)
-            .fillMaxWidth()){
+            .fillMaxWidth()
+        ){
             Text(text = exerciseName, fontSize = 20.sp)
+
             Row {
                 Text(text = bodyPart)
-
                 Text(text = "\t\t\t\t")
                 Text(text = exerciseType)
+                //Text(text = "\t\t\t\t")
+
             }
         }
+        Column (
+            modifier = Modifier.padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Spacer(modifier = Modifier.padding(bottom = 5.dp))
+                Text(text = "Add Workout")
+
+            }
+        }
+
+
     }
 
 }

@@ -17,8 +17,13 @@ fun NavigationController(navController: NavHostController = rememberNavControlle
     ) {
         //If we do nav.navigate(route), it will display whatever is in the corresponding composable
         composable(Routes.ExerciseListScreen.route) {
-
             ExerciseListScreen(exercises = createExercises())
+        }
+        composable(Routes.ProgressScreen.route){
+            ProgressScreen(exercises = createExercises())
+        }
+        composable(Routes.WorkoutPlanScreen.route){
+            WorkoutPlanScreen(exercises = createExercises())
         }
     }
 }

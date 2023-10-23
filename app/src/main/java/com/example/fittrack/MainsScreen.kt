@@ -56,11 +56,11 @@ private fun BottomBar(
 
         //Fill in with your route
         NavigationBarItem(
-            selected =  nav.currentBackStackEntry?.destination?.route == Routes.ExerciseListScreen.route,
+            selected =  nav.currentBackStackEntry?.destination?.route == Routes.ProgressScreen.route,
             onClick = {
-//                nav.navigate(Routes.ExerciseListScreen.route){
-//                    current = Routes.ExerciseListScreen.route;
-//                }
+                nav.navigate(Routes.ProgressScreen.route){
+                    current = Routes.ProgressScreen.route;
+                }
             },
             icon = {
                 Icon(Icons.Default.Build, "")
@@ -70,11 +70,11 @@ private fun BottomBar(
             }
         )
         NavigationBarItem(
-                selected =  nav.currentBackStackEntry?.destination?.route == Routes.ExerciseListScreen.route,
+                selected =  nav.currentBackStackEntry?.destination?.route == Routes.WorkoutPlanScreen.route,
         onClick = {
-//            nav.navigate(Routes.ExerciseListScreen.route){
-//                current = Routes.ExerciseListScreen.route;
-//            }
+            nav.navigate(Routes.WorkoutPlanScreen.route){
+                current = Routes.WorkoutPlanScreen.route;
+            }
         },
         icon = {
             Icon(Icons.Default.PlayArrow, "")
