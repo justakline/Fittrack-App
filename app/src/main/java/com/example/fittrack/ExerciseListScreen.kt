@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Text
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -40,19 +42,32 @@ import com.example.fittrack.models.ExerciseType
 
 @Composable
 fun ExerciseListScreen(exercises: MutableList<Exercise> ){
-var search by remember { mutableStateOf("Search") }
+    var search by remember { mutableStateOf("Search") }
 
 
-Column{
-    Text(modifier = Modifier.fillMaxWidth(), text = "Exercises", fontSize = 36.sp, textAlign = TextAlign.Center)
-    SearchBar(searchValue = search, changeSearchValue = {i -> search = i})
-    Categories()
-    Exercises(exercises)
+    Column{
+        AddNewWorkout()
+        Text(modifier = Modifier.fillMaxWidth(), text = "Exercises", fontSize = 36.sp, textAlign = TextAlign.Center)
+        SearchBar(searchValue = search, changeSearchValue = {i -> search = i})
+
+        Categories()
+        Exercises(exercises)
+
+    }
+
+
 
 }
 
+@Composable
+fun AddNewWorkout(){
+    Box(modifier = Modifier.fillMaxWidth().padding( 8.dp), contentAlignment = Alignment.CenterStart){
+        Row( modifier = Modifier.clickable {/* TODO  adding new workouts*/  },horizontalArrangement = Arrangement.Center) {
+            Text(text = "New", color = Color.Blue)
+            Icon(Icons.Rounded.Add, contentDescription ="",tint = Color.Blue )
+        }
 
-
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,7 +126,7 @@ fun createDropDown(title: String, expanded: Boolean, dropDownWidth : Dp, textSiz
         TextField(modifier = Modifier
             .clickable {}
             .menuAnchor()
-            .height(45.dp)
+            .height(55.dp)
             .padding(0.dp)
             .width(dropDownWidth),
             textStyle = TextStyle(fontSize = textSize, textAlign = TextAlign.Center),
@@ -169,14 +184,14 @@ fun ExerciseCard(exerciseName:String, bodyPart: String, exerciseType:String){
             modifier = Modifier.padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Spacer(modifier = Modifier.padding(bottom = 5.dp))
-                Text(text = "Add Workout")
-
-            }
+//            Button(
+//                onClick = { /*TODO*/ },
+//                modifier = Modifier.fillMaxWidth(),
+//            ) {
+//                Spacer(modifier = Modifier.padding(bottom = 5.dp))
+//                Text(text = "Add Workout")
+//
+//            }
         }
 
 
