@@ -1,6 +1,7 @@
 package com.example.fittrack
 
 import WorkoutPlanPopup
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -33,16 +34,18 @@ import androidx.compose.ui.unit.sp
 import com.example.fittrack.models.Exercise
 
 @Composable
-fun WorkoutPlanScreen(exercises: MutableList<Exercise>){
+fun WorkoutPlanScreen(allExercises: MutableList<Exercise>){
+    //For choosing to go on and start a new workout
     var popupClicked by remember {mutableStateOf(false)}
     var currentlyWorkingOut by remember{ mutableStateOf(false) }
 
     //This will popup a new window of a current workout
     if(currentlyWorkingOut){
-        ActiveWorkoutScreen(exercises = exercises, {
+        ActiveWorkoutScreen(allExercises = allExercises, {
             popupClicked = false
             currentlyWorkingOut = false})
     }else {
+        Log.d("", allExercises.toString())
         if (popupClicked) {
             WorkoutPlanPopup({ popupClicked = false }, {currentlyWorkingOut = true})
         }

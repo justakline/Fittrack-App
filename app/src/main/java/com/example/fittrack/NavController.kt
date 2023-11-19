@@ -23,7 +23,7 @@ fun NavigationController(navController: NavHostController = rememberNavControlle
             ProgressScreen(exercises = createExercises())
         }
         composable(Routes.WorkoutPlanScreen.route){
-            WorkoutPlanScreen(exercises = createExercises())
+            WorkoutPlanScreen(allExercises = createExercises())
         }
     }
 }
