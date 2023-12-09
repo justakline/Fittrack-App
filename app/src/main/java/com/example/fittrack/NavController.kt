@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.*
 
 import androidx.navigation.compose.*
+import com.example.fittrack.WorkoutPlanScreen.WorkoutPlanScreen
 
 @Composable
 fun NavigationController(navController: NavHostController = rememberNavController()) {
