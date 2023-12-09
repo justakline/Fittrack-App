@@ -75,7 +75,11 @@ fun AddNewWorkout(){
 fun SearchBar(searchValue:String, changeSearchValue: (String) -> Unit){
     TextField(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 8.dp), value = searchValue, onValueChange = {i -> changeSearchValue(i)}, singleLine = true)
+        .padding(horizontal = 8.dp),
+            value = searchValue,
+            onValueChange = {i -> changeSearchValue(i)},
+            singleLine = true)
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
