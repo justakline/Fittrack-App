@@ -34,32 +34,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fittrack.models.BodyPart
 import com.example.fittrack.models.ExerciseType
-
 @Composable
+// Screen for listing all exercises with a search and filter functionality
 fun ExerciseListScreen(exercises: ExerciseListViewModel){
-    var search by remember { mutableStateOf("Search") }
+    var search by remember { mutableStateOf("Search") } // State to keep track of search text
 
+    Column{ //JK
+        AddNewWorkout() //JK
+        Text(modifier = Modifier.fillMaxWidth(), text = "Exercises", fontSize = 36.sp, textAlign = TextAlign.Center) //JK
+        SearchBar(searchValue = search, changeSearchValue = {i -> search = i}) //JK
 
-    Column{
-        AddNewWorkout()
-        Text(modifier = Modifier.fillMaxWidth(), text = "Exercises", fontSize = 36.sp, textAlign = TextAlign.Center)
-        SearchBar(searchValue = search, changeSearchValue = {i -> search = i})
-
-        Categories()
-        Exercises(exercises)
+        Categories() //JK
+        Exercises(exercises) //JK
 
     }
-
-
-
 }
 
 @Composable
+// Composable for adding a new workout
 fun AddNewWorkout(){
-    Box(modifier = Modifier.fillMaxWidth().padding( 8.dp), contentAlignment = Alignment.CenterStart){
-        Row( modifier = Modifier.clickable {/* TODO  adding new workouts*/  },horizontalArrangement = Arrangement.Center) {
-            Text(text = "New", color = Color.Blue)
-            Icon(Icons.Rounded.Add, contentDescription ="",tint = Color.Blue )
+    Box(modifier = Modifier.fillMaxWidth().padding( 8.dp), contentAlignment = Alignment.CenterStart){ //JK
+        Row( modifier = Modifier.clickable {/* TODO  adding new workouts*/  },horizontalArrangement = Arrangement.Center) { //JK
+            Text(text = "New", color = Color.Blue) //JK
+            Icon(Icons.Rounded.Add, contentDescription ="",tint = Color.Blue ) //JK
         }
 
     }
@@ -67,57 +64,39 @@ fun AddNewWorkout(){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+// Search bar for filtering exercises
 fun SearchBar(searchValue:String, changeSearchValue: (String) -> Unit){
     TextField(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 8.dp), value = searchValue, onValueChange = {i -> changeSearchValue(i)}, singleLine = true)
+        .padding(horizontal = 8.dp), value = searchValue, onValueChange = {i -> changeSearchValue(i)}, singleLine = true) //JK
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Categories (){
-    //This will be used for if the user wants to see all the exercises of a certain bodypart or category
-    var byBodyPart by remember {mutableStateOf(false)}
-    var byExerciseType by remember {mutableStateOf(false)}
-    var textSize by remember{ mutableStateOf(14.sp) }
-    var dropDownSize by remember {mutableStateOf(200.dp) }
+// Categories for filtering exercises by body part or exercise type
+fun Categories (){//JK
+    var byBodyPart by remember {mutableStateOf(false)} // State for body part filter
+    var byExerciseType by remember {mutableStateOf(false)} // State for exercise type filter
+    var textSize by remember{ mutableStateOf(14.sp) } // Text size for dropdown
+    var dropDownSize by remember {mutableStateOf(200.dp) } // Size of the dropdown
 
-
-    Row(modifier = Modifier.padding(10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        //Wrapping in a box Allows me to change the weight, ie how much, percentagewise it takes up
-        Box(modifier = Modifier.weight(1f)) {
-            createDropDown(title = "By Body Part", expanded = byBodyPart, dropDownWidth = dropDownSize, textSize = textSize,
-                swapExpanded = {i-> byBodyPart = i}, BodyPart.values().map { i-> i.toString() })
+    Row(modifier = Modifier.padding(10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) { //JK
+        Box(modifier = Modifier.weight(1f)) { //JK
+            createDropDown(title = "By Body Part", expanded = byBodyPart, dropDownWidth = dropDownSize, textSize = textSize, //JK
+                swapExpanded = {i-> byBodyPart = i}, BodyPart.values().map { i-> i.toString() }) //JK
         }
-        Box (modifier = Modifier.weight(1f)) {
-            createDropDown(title = "By Category",expanded = byExerciseType, dropDownWidth = dropDownSize, textSize =textSize ,
-                swapExpanded = {i-> byExerciseType = i}, ExerciseType.values().map{i->i.toString()} )
+        Box (modifier = Modifier.weight(1f)) { //JK
+            createDropDown(title = "By Category",expanded = byExerciseType, dropDownWidth = dropDownSize, textSize =textSize , //JK
+                swapExpanded = {i-> byExerciseType = i}, ExerciseType.values().map{i->i.toString()} ) //JK
         }
-
-
-
     }
-
 }
-
-/* The archietecture is
-           MenuBox
-               Textfield
-               Dropdown
-                   Item
-                   Item
-
-        */
-
-//This is where the dropdown menu lives for the 2 categories that you can filter the list by
-//The parameters hoist up the state and the changing some of the state as well as having conistent styling
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+// Dropdown menu for selecting exercise categories
 fun createDropDown(title: String, expanded: Boolean, dropDownWidth : Dp, textSize : TextUnit, swapExpanded: (Boolean) ->Unit, items: List<String>) {
-
-    ExposedDropdownMenuBox(expanded =  expanded, modifier = Modifier.width(dropDownWidth), onExpandedChange = {swapExpanded(!expanded)
-    } ) {
+    ExposedDropdownMenuBox(expanded =  expanded, modifier = Modifier.width(dropDownWidth), onExpandedChange = {swapExpanded(!expanded) } ) { //JK
         TextField(modifier = Modifier
             .clickable {}
             .menuAnchor()
@@ -128,68 +107,46 @@ fun createDropDown(title: String, expanded: Boolean, dropDownWidth : Dp, textSiz
             value = title,
             onValueChange ={}, readOnly = true,
             shape = RoundedCornerShape(30.dp),
-
-            colors = TextFieldDefaults.textFieldColors(unfocusedIndicatorColor = Color.Transparent, focusedIndicatorColor = Color.Transparent),
-
-
-
+            colors = TextFieldDefaults.textFieldColors(unfocusedIndicatorColor = Color.Transparent, focusedIndicatorColor = Color.Transparent), //JK
         )
-        ExposedDropdownMenu(expanded =  expanded, onDismissRequest = {swapExpanded(false) }) {
-            //Create a new DropdownMenuItem for each Enum... Do this so If I change or add some more, it wont be hard coded
-            items.forEach { part ->
-                DropdownMenuItem(text = { Text(text = part)}, onClick = {swapExpanded(false)})
-
+        ExposedDropdownMenu(expanded =  expanded, onDismissRequest = {swapExpanded(false) }) { //JK
+            items.forEach { part -> //JK
+                DropdownMenuItem(text = { Text(text = part)}, onClick = {swapExpanded(false)}) //JK
             }
         }
     }
 }
 
 @Composable
+// Displays exercises in a list format
 fun Exercises(exerciseList: ExerciseListViewModel) {
-
-    //Use a lazy column for all the exercises so that we do not render every single one even when off screen
-    LazyColumn(modifier = Modifier.padding(10.dp, 4.dp),verticalArrangement = Arrangement.spacedBy(10.dp)){
-        items(exerciseList.exercises.size){i ->
-            ExerciseCard(exerciseName = exerciseList.exercises[i].name, bodyPart = exerciseList.exercises[i].bodyPart.toString(), exerciseType = exerciseList.exercises[i].type.toString())
+    LazyColumn(modifier = Modifier.padding(10.dp, 4.dp),verticalArrangement = Arrangement.spacedBy(10.dp)){ //JK
+        items(exerciseList.exercises.size){i -> //JK
+            ExerciseCard(exerciseName = exerciseList.exercises[i].name, bodyPart = exerciseList.exercises[i].bodyPart.toString(), exerciseType = exerciseList.exercises[i].type.toString()) //JK
         }
     }
 }
-@Composable
-fun ExerciseCard(exerciseName:String, bodyPart: String, exerciseType:String){
-    //Using the documentation I found a elevated cards composable, it makes lists look niice
-    //Card elevation gives how much shadow to make it look elevated
-    ElevatedCard (elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)){
 
-        //Separates the Card into a title, and then the categories on the bottem
+@Composable
+// Card representation of each exercise
+fun ExerciseCard(exerciseName:String, bodyPart: String, exerciseType:String){
+    ElevatedCard (elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)){ //JK
         Column (modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth()
-        ){
-            Text(text = exerciseName, fontSize = 20.sp)
-
-            Row {
-                Text(text = bodyPart)
-                Text(text = "\t\t\t\t")
-                Text(text = exerciseType)
-                //Text(text = "\t\t\t\t")
-
+        ){ //JK
+            Text(text = exerciseName, fontSize = 20.sp) //JK
+            Row { //JK
+                Text(text = bodyPart) //JK
+                Text(text = "\t\t\t\t") //JK
+                Text(text = exerciseType) //JK
             }
         }
         Column (
             modifier = Modifier.padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
-//            Button(
-//                onClick = { /*TODO*/ },
-//                modifier = Modifier.fillMaxWidth(),
-//            ) {
-//                Spacer(modifier = Modifier.padding(bottom = 5.dp))
-//                Text(text = "Add Workout")
-//
-//            }
-        }
+        ){ //JK
 
-
-    }
-
+        } //JK
+    } //JK
 }

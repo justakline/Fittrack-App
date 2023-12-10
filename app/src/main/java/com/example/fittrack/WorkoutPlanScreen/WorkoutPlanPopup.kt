@@ -20,17 +20,18 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun WorkoutPlanPopup(popupClicked: ()->Unit, workoutClicked: () -> Unit) {
+fun WorkoutPlanPopup(popupClicked: ()->Unit, workoutClicked: () -> Unit) {//JK
 
-    AlertDialog(onDismissRequest = { /* Empty because logic is down below*/ }, confirmButton = { /*Logic is below*/ },
+    //Go on if they click Start Workout, go Back to WorkoutplanScreen if they click Go Bacl
+    AlertDialog(onDismissRequest = { /* Empty because logic is down below*/ }, confirmButton = { /*Logic is below*/ },//JK
 
         dismissButton = {
-            Button(modifier = Modifier.fillMaxWidth(),   onClick = { popupClicked()}, colors = ButtonDefaults.buttonColors(Color.Red, Color.White,Color.Gray, Color.Gray )) {
-                Text(text = "Go Back")
+            Button(modifier = Modifier.fillMaxWidth(),   onClick = { popupClicked()}, colors = ButtonDefaults.buttonColors(Color.Red, Color.White,Color.Gray, Color.Gray )) {//JK
+                Text(text = "Go Back")//JK
 
             }
-            Button( modifier = Modifier.fillMaxWidth(), onClick = { workoutClicked() }) {
-                Text(text = "Start Workout")
+            Button( modifier = Modifier.fillMaxWidth(), onClick = { workoutClicked() }) {//JK
+                Text(text = "Start Workout")//JK
 
             }
 

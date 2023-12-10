@@ -26,71 +26,63 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fittrack.ExerciseListPopup
 import com.example.fittrack.models.Exercise
-import com.example.fittrack.models.ExerciseData
-import com.example.fittrack.models.ExerciseDataPoint
-import com.example.fittrack.models.WorkoutData
-import java.util.Date
-
 @Composable
+// Screen for managing active workout
 fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: ()->Unit, viewModel: WorkoutPlanViewModel){
-
-
-
-
-
+    // Check if the user clicked to add an exercise
     if(viewModel.addExerciseClicked){
+        // Pop-up for adding exercises to the workout
         ExerciseListPopup(allExercises = allExercises, exitPopup = { viewModel.addExerciseClicked = false },
-             addExerciseToWorkout = {exercise ->  viewModel.currentExercises = viewModel.currentExercises.toMutableList().apply { add(exercise) }
-                 viewModel.addExerciseClicked = false})
+            addExerciseToWorkout = {exercise ->
+                viewModel.currentExercises = viewModel.currentExercises.toMutableList().apply { add(exercise) }
+                viewModel.addExerciseClicked = false
+            })
     }
 
-    Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Row (horizontalArrangement = Arrangement.SpaceBetween){
-            Icon(Icons.Rounded.Check, contentDescription = "",   modifier = Modifier
+    // Column layout for the screen
+    Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) { //JK
+        // Row for the workout header
+        Row (horizontalArrangement = Arrangement.SpaceBetween){ //JK
+            Icon(Icons.Rounded.Check, contentDescription = "",   modifier = Modifier //JK
                 .weight(1f)
-                .clickable { returnToWorkouts() },)
-            Text(
-                modifier = Modifier.weight(5f),
-                text = "Default Workout Name",
-                fontSize = 22.sp,
-                textAlign = TextAlign.Left
+                .clickable { returnToWorkouts() },) //JK
+            Text( //JK
+                modifier = Modifier.weight(5f), //JK
+                text = "Default Workout Name", //JK
+                fontSize = 22.sp, //JK
+                textAlign = TextAlign.Left //JK
             )
 
         }
-        //Allow For things in the box to be left oriented while everything else be centered
-        Box(modifier = Modifier.fillMaxWidth()){
-            //Exercises
-            LazyColumn(){
-                items(viewModel.currentExercises){exercise->
-
-                    Exercise(exercise, viewModel)
+        // Box layout for exercise listing
+        Box(modifier = Modifier.fillMaxWidth()){ //JK
+            // List of exercises
+            LazyColumn(){ //JK
+                items(viewModel.currentExercises){exercise-> //JK
+                    Exercise(exercise, viewModel) //JK
                 }
                 /* TODO Where the exercises will be */
-
             }
         }
 
-        /*TODO Need to style better*/
-        Button(onClick = { viewModel.addExerciseClicked = true }) {
-            Text(text = "Add Exercise")
+        /* Buttons for adding and cancelling workout */
+        Button(onClick = { viewModel.addExerciseClicked = true }) { //JK
+            Text(text = "Add Exercise") //JK
         }
-        Button(onClick = { returnToWorkouts() }) {
-            Text(text = "Cancel Workout")
+        Button(onClick = { returnToWorkouts() }) { //JK
+            Text(text = "Cancel Workout") //JK
         }
 
     }
@@ -99,73 +91,67 @@ fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: (
 }
 
 @Composable
+// Displays a single exercise with options to modify
 fun Exercise(exercise: Exercise, viewModel: WorkoutPlanViewModel){
-    var sets by remember { mutableStateOf(0)}
+    var sets by remember { mutableStateOf(0)} // State to track number of sets
 
-    Column {
-        Text(text = "${exercise.name}")
-        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-            Text(modifier = Modifier.weight(3f),text = "Set")
-            Text(modifier = Modifier.weight(3f),text = "LBS")
-            Text(modifier = Modifier.weight(3f),text = "Reps")
-            Icon(Icons.Rounded.Delete, contentDescription = "",modifier = Modifier.weight(1f).clickable {
-                viewModel.removeExercise(exercise)
-
+    // Column layout for each exercise
+    Column { //JK
+        Text(text = "${exercise.name}") //JK
+        // Row for displaying set details
+        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){ //JK
+            Text(modifier = Modifier.weight(3f),text = "Set") //JK
+            Text(modifier = Modifier.weight(3f),text = "LBS") //JK
+            Text(modifier = Modifier.weight(3f),text = "Reps") //JK
+            Icon(Icons.Rounded.Delete, contentDescription = "",modifier = Modifier.weight(1f).clickable { //JK
+                viewModel.removeExercise(exercise) //JK
             })
         }
-        LazyColumn(modifier = Modifier.height((60 + 60 * exercise.exerciseDataPoints.size).dp)) {
-            items(exercise.exerciseDataPoints) { dataPoint ->
-                ExerciseRow(setNumber = dataPoint.set, onDelete = {
+        // LazyColumn for exercise data points
+        LazyColumn(modifier = Modifier.height((60 + 60 * exercise.exerciseDataPoints.size).dp)) { //JK
+            items(exercise.exerciseDataPoints) { dataPoint -> //JK
+                ExerciseRow(setNumber = dataPoint.set, onDelete = { //JK
                     // Update the exerciseDataPoints for this specific exercise
-                    viewModel.removeSetFromExercise(dataPoint, exercise)
+                    viewModel.removeSetFromExercise(dataPoint, exercise) //JK
                 }, viewModel)
             }
             item {
-                Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    viewModel.addSetToExercise(exercise)
-
+                Button(modifier = Modifier.fillMaxWidth(), onClick = { //JK
+                    viewModel.addSetToExercise(exercise) //JK
                 }) {
-                    Text(text = "Add Set")
+                    Text(text = "Add Set") //JK
                 }
             }
         }
 
-
-
-//
-//        ExerciseRow(set =1 , lbs =25 , reps = 0, true, true)
-//
-//        ExerciseRow(set =2 , lbs =25 , reps = 0, true, false)
     }
-
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+// Row layout for each set within an exercise
 fun ExerciseRow(setNumber: Int, onDelete: () -> Unit, viewModel: WorkoutPlanViewModel){
-    var lbs by rememberSaveable { mutableStateOf(0) }
-    var reps by rememberSaveable { mutableStateOf(0) }
+    var lbs by rememberSaveable { mutableStateOf(0) } // State to track pounds
+    var reps by rememberSaveable { mutableStateOf(0) } // State to track repetitions
     val default = 0
     //Only a number keyboard is allowed
     val keyBoard = KeyboardOptions(keyboardType = KeyboardType.Number)
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-        //Read only, keeping consistent ui
-        Card(modifier = Modifier.weight(3f), shape = RoundedCornerShape(10.dp)) {
-            TextField("${setNumber}", onValueChange = {}, readOnly = true)
+    // Row layout for each set
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){ //JK
+        // Read-only card for set number
+        Card(modifier = Modifier.weight(3f), shape = RoundedCornerShape(10.dp)) { //JK
+            TextField("${setNumber}", onValueChange = {}, readOnly = true) //JK
         }
-        //Changing values by the user, doing s=="" for error checking
-        Card(modifier = Modifier.weight(3f),shape = RoundedCornerShape(10.dp)) {
-            TextField(lbs.toString(), onValueChange = {s->  if(s.toIntOrNull() != null ) lbs = s.toInt()}, placeholder = {Text("0")}, keyboardOptions = keyBoard)
+        // Card for entering pounds
+        Card(modifier = Modifier.weight(3f),shape = RoundedCornerShape(10.dp)) { //JK
+            TextField(lbs.toString(), onValueChange = {s->  if(s.toIntOrNull() != null ) lbs = s.toInt()}, placeholder = {Text("0")}, keyboardOptions = keyBoard) //JK
         }
-        Card(modifier = Modifier.weight(3f),shape = RoundedCornerShape(10.dp)) {
-            TextField(reps.toString(), onValueChange = {s->  if(s.toIntOrNull() != null ) reps = s.toInt()}, placeholder = {Text("0")}, keyboardOptions = keyBoard)}
-        Icon(Icons.Rounded.Delete, contentDescription = "", modifier = Modifier
+        // Card for entering reps
+        Card(modifier = Modifier.weight(3f),shape = RoundedCornerShape(10.dp)) { //JK
+            TextField(reps.toString(), onValueChange = {s->  if(s.toIntOrNull() != null ) reps = s.toInt()}, placeholder = {Text("0")}, keyboardOptions = keyBoard)} //JK
+        // Icon for deleting the set
+        Icon(Icons.Rounded.Delete, contentDescription = "", modifier = Modifier //JK
             .weight(1f)
-            .clickable { onDelete() } )
-
-
-
-
+            .clickable { onDelete() } ) //JK
     }
 }

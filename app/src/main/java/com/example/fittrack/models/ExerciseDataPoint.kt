@@ -4,7 +4,7 @@ import java.util.Date
 
 
 //This is one data Point
-data class ExerciseDataPoint (
+data class ExerciseDataPoint ( //JK
     val exercise: Exercise,
     val lbs: Int,
     val set: Int,

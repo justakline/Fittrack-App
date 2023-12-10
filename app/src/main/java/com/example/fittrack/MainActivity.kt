@@ -48,7 +48,7 @@ fun GreetingPreview() {
 }
 
 //Created all of these exercises as dummy information
-fun createExercises(): MutableList<Exercise> {
+fun createExercises(): MutableList<Exercise> { //JK
     return mutableListOf<Exercise>().apply {
         // Legs
         add(Exercise("Squats", ExerciseType.BARBELL, BodyPart.LEGS, mutableListOf ()))

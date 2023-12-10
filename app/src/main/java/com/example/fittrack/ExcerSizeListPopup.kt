@@ -31,61 +31,67 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.fittrack.models.Exercise
 
-
 @Composable
-fun ExerciseListPopup(allExercises: MutableList<Exercise> , exitPopup: ()->Unit,
-                     addExerciseToWorkout:(Exercise) -> Unit) {
-    var selectedExercise by remember { mutableStateOf<Exercise?>(null) }
+// Popup for selecting exercises to add to a workout
+fun ExerciseListPopup(allExercises: MutableList<Exercise>, exitPopup: ()->Unit,
+                      addExerciseToWorkout:(Exercise) -> Unit) {
+    var selectedExercise by remember { mutableStateOf<Exercise?>(null) } // State to track the selected exercise
 
-    Dialog(onDismissRequest = {exitPopup()} ){
-        Card(
-            modifier = Modifier
-                .fillMaxWidth().padding(16.dp).fillMaxHeight(1/2f),
-            shape = RoundedCornerShape(16.dp),
-        ){
-            Column {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Button(onClick = {if (selectedExercise != null) addExerciseToWorkout(selectedExercise!!) }) {
-                        Text(text = "Add Exercise")
-                    }
-                    Button(onClick = { exitPopup()}) {
-                        Text(text = "Cancel")
-                    }
+    // Dialog for exercise list
+    Dialog(onDismissRequest = {exitPopup()} ){ //JK
+        // Card layout for the popup content
+        Card( //JK
+            modifier = Modifier //JK
+                .fillMaxWidth().padding(16.dp).fillMaxHeight(1/2f), //JK
+            shape = RoundedCornerShape(16.dp), //JK
+        ){ //JK
+            // Column layout for the popup content
+            Column { //JK
+                // Row for add and cancel buttons
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { //JK
+                    // Button to add the selected exercise
+                    Button(onClick = {if (selectedExercise != null) addExerciseToWorkout(selectedExercise!!) }) { //JK
+                        Text(text = "Add Exercise") //JK
+                    } //JK
+                    // Button to exit the popup
+                    Button(onClick = { exitPopup()}) { //JK
+                        Text(text = "Cancel") //JK
+                    } //JK
 
-                }
+                } //JK
 
+                // List of exercises
+                LazyColumn(){ //JK
+                    items(allExercises){exercise -> //JK
+                        // Each exercise is clickable
+                        ClickableExercise(exercise, selectedExercise) { e -> selectedExercise = e } //JK
+                    } //JK
 
+                } //JK
 
-                LazyColumn(){
-                    items(allExercises){exercise ->
-                        ClickableExercise(exercise, selectedExercise) { e -> selectedExercise = e }
-                    }
+            } //JK
+        } //JK
 
-                }
-
-            }
-        }
-
-
-
-    }
-
-
+    } //JK
 
 }
 
 @Composable
+// Composable for a clickable exercise item
 fun ClickableExercise(exercise: Exercise, selected:Exercise?, setSelected: (Exercise) -> Unit) {
-    var clicked by remember { mutableStateOf(false) }
-    //Either There is none seleceted and we just clicked on it, or this exercise is the selected one
-    val backgroundColor = if ((selected == null && clicked) || (exercise.equals(selected) && clicked)) Color.LightGray else Color.Transparent
-    Box(modifier = Modifier.clickable {
-        clicked = !clicked
-        setSelected(exercise)}) {
-        Row(modifier = Modifier.background(backgroundColor).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "${exercise.name}")
-            Text(text = "${exercise.type}")
-            Text(text = "${exercise.bodyPart}")
-        }
-    }
+    var clicked by remember { mutableStateOf(false) } // State to track if the exercise is clicked
+    // Determine the background color based on selection state
+    val backgroundColor = if ((selected == null && clicked) || (exercise.equals(selected) && clicked)) Color.LightGray else Color.Transparent //JK
+    // Box layout for each exercise item
+    Box(modifier = Modifier.clickable { //JK
+        clicked = !clicked // Toggle clicked state
+        setSelected(exercise) // Set the selected exercise
+    }) { //JK
+        // Row layout for exercise details
+        Row(modifier = Modifier.background(backgroundColor).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { //JK
+            Text(text = "${exercise.name}") //JK
+            Text(text = "${exercise.type}") //JK
+            Text(text = "${exercise.bodyPart}") //JK
+        } //JK
+    } //JK
 }
