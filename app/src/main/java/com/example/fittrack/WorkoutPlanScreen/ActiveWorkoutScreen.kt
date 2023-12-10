@@ -1,11 +1,9 @@
-package com.example.fittrack
+package com.example.fittrack.WorkoutPlanScreen
 
 //package com.example.fittrack
 
-import WorkoutPlanPopup
-import androidx.annotation.Nullable
+import WorkoutPlanViewModel
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,63 +12,51 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fittrack.ExerciseListPopup
 import com.example.fittrack.models.Exercise
 import com.example.fittrack.models.ExerciseData
 import com.example.fittrack.models.ExerciseDataPoint
 import com.example.fittrack.models.WorkoutData
-import kotlinx.coroutines.delay
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 @Composable
-fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: ()->Unit){
-    var currentExercises by remember { mutableStateOf(mutableListOf<Exercise>()) }
-    var addExerciseClicked by remember { mutableStateOf(false) }
-    var workoutData by remember {
-        mutableStateOf(WorkoutData(mutableListOf<ExerciseData>(), Date()))
-    }
+fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: ()->Unit, viewModel: WorkoutPlanViewModel){
 
-    if(addExerciseClicked){
-        ExerciseListPopup(allExercises = allExercises, exitPopup = { addExerciseClicked = false },
-             addExerciseToWorkout = {exercise ->  currentExercises = currentExercises.toMutableList().apply { add(exercise) }
-                                                    addExerciseClicked = false})
+
+
+
+
+    if(viewModel.addExerciseClicked){
+        ExerciseListPopup(allExercises = allExercises, exitPopup = { viewModel.addExerciseClicked = false },
+             addExerciseToWorkout = {exercise ->  viewModel.currentExercises = viewModel.currentExercises.toMutableList().apply { add(exercise) }
+                 viewModel.addExerciseClicked = false})
     }
 
     Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -90,8 +76,9 @@ fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: (
         Box(modifier = Modifier.fillMaxWidth()){
             //Exercises
             LazyColumn(){
-                items(currentExercises){exercise->
-                    Exercise(exercise, workoutData)
+                items(viewModel.currentExercises){exercise->
+
+                    Exercise(exercise, viewModel)
                 }
                 /* TODO Where the exercises will be */
 
@@ -99,7 +86,7 @@ fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: (
         }
 
         /*TODO Need to style better*/
-        Button(onClick = { addExerciseClicked = true }) {
+        Button(onClick = { viewModel.addExerciseClicked = true }) {
             Text(text = "Add Exercise")
         }
         Button(onClick = { returnToWorkouts() }) {
@@ -112,33 +99,32 @@ fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: (
 }
 
 @Composable
-fun Exercise(exercise: Exercise, workoutData: WorkoutData){
+fun Exercise(exercise: Exercise, viewModel: WorkoutPlanViewModel){
     var sets by remember { mutableStateOf(0)}
-    var dataPoints by remember{ mutableStateOf(mutableListOf<ExerciseDataPoint>() ) }
-    var exerciseData by remember {
-        mutableStateOf( ExerciseData(exercise,dataPoints))
-    }
+
     Column {
         Text(text = "${exercise.name}")
         Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
             Text(modifier = Modifier.weight(3f),text = "Set")
             Text(modifier = Modifier.weight(3f),text = "LBS")
             Text(modifier = Modifier.weight(3f),text = "Reps")
-            Icon(Icons.Rounded.Delete, contentDescription = "",modifier = Modifier.weight(1f),)
+            Icon(Icons.Rounded.Delete, contentDescription = "",modifier = Modifier.weight(1f).clickable {
+                viewModel.removeExercise(exercise)
+
+            })
         }
-        LazyColumn(modifier = Modifier.height((60+60*dataPoints.size).dp)){
-
-//            dataPoints.forEach { dataPoint->
-//                ExerciseRow(setNumber = dataPoint.set)
-//            }
-            items(dataPoints){ i ->
-                ExerciseRow(setNumber = i.set)
+        LazyColumn(modifier = Modifier.height((60 + 60 * exercise.exerciseDataPoints.size).dp)) {
+            items(exercise.exerciseDataPoints) { dataPoint ->
+                ExerciseRow(setNumber = dataPoint.set, onDelete = {
+                    // Update the exerciseDataPoints for this specific exercise
+                    viewModel.removeSetFromExercise(dataPoint, exercise)
+                }, viewModel)
             }
-            item{
-                Button( modifier = Modifier.fillMaxWidth(), onClick = {
-                    dataPoints = dataPoints.toMutableList().apply { add(ExerciseDataPoint(exercise, 0,0,0))} } )
+            item {
+                Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                    viewModel.addSetToExercise(exercise)
 
-                {
+                }) {
                     Text(text = "Add Set")
                 }
             }
@@ -157,9 +143,9 @@ fun Exercise(exercise: Exercise, workoutData: WorkoutData){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExerciseRow(setNumber: Int){
-    var lbs by remember { mutableStateOf<Int?>(null)}
-    var reps by remember { mutableStateOf<Int?>(null)}
+fun ExerciseRow(setNumber: Int, onDelete: () -> Unit, viewModel: WorkoutPlanViewModel){
+    var lbs by rememberSaveable { mutableStateOf(0) }
+    var reps by rememberSaveable { mutableStateOf(0) }
     val default = 0
     //Only a number keyboard is allowed
     val keyBoard = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -170,12 +156,13 @@ fun ExerciseRow(setNumber: Int){
         }
         //Changing values by the user, doing s=="" for error checking
         Card(modifier = Modifier.weight(3f),shape = RoundedCornerShape(10.dp)) {
-            TextField("${if (lbs ==null) "" else lbs }", onValueChange = {s-> if(s.toIntOrNull()!= null) lbs = s.toInt() else lbs= null}, placeholder = {Text("0")}, keyboardOptions = keyBoard)
+            TextField(lbs.toString(), onValueChange = {s->  if(s.toIntOrNull() != null ) lbs = s.toInt()}, placeholder = {Text("0")}, keyboardOptions = keyBoard)
         }
         Card(modifier = Modifier.weight(3f),shape = RoundedCornerShape(10.dp)) {
-            TextField("${if (reps ==null) "" else reps }", onValueChange = {s-> if(s.toIntOrNull()!= null) reps = s.toInt() else reps= null}, placeholder = {Text("0")}, keyboardOptions = keyBoard)
-        }
-        Icon(Icons.Rounded.Delete, contentDescription = "", modifier = Modifier.weight(1f))
+            TextField(reps.toString(), onValueChange = {s->  if(s.toIntOrNull() != null ) reps = s.toInt()}, placeholder = {Text("0")}, keyboardOptions = keyBoard)}
+        Icon(Icons.Rounded.Delete, contentDescription = "", modifier = Modifier
+            .weight(1f)
+            .clickable { onDelete() } )
 
 
 

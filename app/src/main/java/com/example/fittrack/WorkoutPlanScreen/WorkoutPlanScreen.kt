@@ -1,22 +1,18 @@
-package com.example.fittrack
+package com.example.fittrack.WorkoutPlanScreen
 
-import WorkoutPlanPopup
+import WorkoutPlanViewModel
 import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -31,23 +27,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fittrack.ExerciseListViewModel
 import com.example.fittrack.models.Exercise
 
 @Composable
-fun WorkoutPlanScreen(allExercises: MutableList<Exercise>){
+fun WorkoutPlanScreen(allExercises: MutableList<Exercise>, exerciseList: ExerciseListViewModel){
+    //Use the exerciseList for adding new Exercises to the total list!!!
+    //When restarting the app so that the next we will have those new exercises.
+
+    val viewModel: WorkoutPlanViewModel = viewModel()
     //For choosing to go on and start a new workout
     var popupClicked by remember {mutableStateOf(false)}
     var currentlyWorkingOut by remember{ mutableStateOf(false) }
 
     //This will popup a new window of a current workout
-    if(currentlyWorkingOut){
+    if(viewModel.currentlyWorkingOut){
         ActiveWorkoutScreen(allExercises = allExercises, {
-            popupClicked = false
-            currentlyWorkingOut = false})
-    }else {
+            viewModel.popupClicked = false
+            viewModel.currentlyWorkingOut = false}, viewModel)
+    }else if(viewModel.addingNewWorkout){
+        NewWorkoutScreen(allExercises = allExercises, {
+            viewModel.addingNewWorkout = false}, viewModel
+        )
+        
+    }
+    else{
         Log.d("", allExercises.toString())
-        if (popupClicked) {
-            WorkoutPlanPopup({ popupClicked = false }, {currentlyWorkingOut = true})
+        if ( viewModel.popupClicked) {
+            WorkoutPlanPopup({  viewModel.popupClicked = false }, { viewModel.currentlyWorkingOut = true})
         }
         Column {
             Text(
@@ -59,7 +67,7 @@ fun WorkoutPlanScreen(allExercises: MutableList<Exercise>){
 
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Row(
-                    modifier = Modifier.clickable {/* TODO  adding new workouts*/ },
+                    modifier = Modifier.clickable {viewModel.currentlyWorkingOut = true },
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(text = "Add New Workout")
@@ -74,7 +82,7 @@ fun WorkoutPlanScreen(allExercises: MutableList<Exercise>){
                 columns = GridCells.Fixed(2), // Adjust the number of columns as needed
                 content = {
                     items(5) { index ->
-                        WorkoutPlan({ popupClicked = true })
+                        WorkoutPlan({  viewModel.popupClicked = true })
                     }
                 }
             )

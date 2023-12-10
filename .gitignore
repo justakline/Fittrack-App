@@ -13,3 +13,9 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/percentage.sh
+/app/percentage.bat
+/app/author_lines_percentage.sh
+/app/line_percent.py
+/app/lines_percent.bat
+

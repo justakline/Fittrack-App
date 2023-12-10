@@ -1,4 +1,4 @@
-
+package com.example.fittrack.WorkoutPlanScreen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
