@@ -1,4 +1,9 @@
 package com.example.fittrack.WorkoutPlanScreen
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,10 +18,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
-
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
+import com.example.fittrack.MainActivity
+import com.example.fittrack.R
 
 
 @Composable
@@ -30,7 +39,7 @@ fun WorkoutPlanPopup(popupClicked: ()->Unit, workoutClicked: () -> Unit) {//JK
                 Text(text = "Go Back")//JK
 
             }
-            Button( modifier = Modifier.fillMaxWidth(), onClick = { workoutClicked() }) {//JK
+            Button( modifier = Modifier.fillMaxWidth(), onClick = { workoutClicked(); Notification()  }) {//JK
                 Text(text = "Start Workout")//JK
 
             }
@@ -40,3 +49,5 @@ fun WorkoutPlanPopup(popupClicked: ()->Unit, workoutClicked: () -> Unit) {//JK
 
 
 }
+
+
