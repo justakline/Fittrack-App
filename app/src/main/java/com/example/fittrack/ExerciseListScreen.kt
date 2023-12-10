@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fittrack.models.BodyPart
 import com.example.fittrack.models.ExerciseType
+
 @Composable
 // Screen for listing all exercises with a search and filter functionality
 fun ExerciseListScreen(exercises: ExerciseListViewModel){
@@ -53,10 +54,12 @@ fun ExerciseListScreen(exercises: ExerciseListViewModel){
 @Composable
 // Composable for adding a new workout
 fun AddNewWorkout(){
+
     Box(modifier = Modifier.fillMaxWidth().padding( 8.dp), contentAlignment = Alignment.CenterStart){ //JK
         Row( modifier = Modifier.clickable {/* TODO  adding new workouts*/  },horizontalArrangement = Arrangement.Center) { //JK
             Text(text = "New", color = Color.Blue) //JK
             Icon(Icons.Rounded.Add, contentDescription ="",tint = Color.Blue ) //JK
+
         }
 
     }
@@ -66,9 +69,19 @@ fun AddNewWorkout(){
 @Composable
 // Search bar for filtering exercises
 fun SearchBar(searchValue:String, changeSearchValue: (String) -> Unit){
-    TextField(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 8.dp), value = searchValue, onValueChange = {i -> changeSearchValue(i)}, singleLine = true) //JK
+
+    TextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+            value = searchValue,
+            onValueChange = {i -> changeSearchValue(i)},
+            singleLine = true,
+        //color = TextFieldDefaults.textFieldColors(
+        //    containerColor = Red1
+        //)
+    )
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
