@@ -5,12 +5,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.compose.*
 import com.example.fittrack.WorkoutPlanScreen.WorkoutPlanScreen
 
 @Composable
 fun NavigationController(navController: NavHostController = rememberNavController()) {
+    val exerciseList: ExerciseListViewModel = viewModel()
+    LaunchedEffect(Unit) {
+        exerciseList.setupExercises(initialExercises = createExercises())
+    }
+
 
     NavHost(
         navController = navController,
@@ -18,13 +24,13 @@ fun NavigationController(navController: NavHostController = rememberNavControlle
     ) {
         //If we do nav.navigate(route), it will display whatever is in the corresponding composable
         composable(Routes.ExerciseListScreen.route) {
-            ExerciseListScreen(exercises = createExercises())
+            ExerciseListScreen(exerciseList)
         }
         composable(Routes.ProgressScreen.route){
-            ProgressScreen(exercises = createExercises())
+            ProgressScreen(exerciseList)
         }
         composable(Routes.WorkoutPlanScreen.route){
-            WorkoutPlanScreen(allExercises = createExercises())
+            WorkoutPlanScreen(allExercises = createExercises(),  exerciseList )
         }
     }
 }

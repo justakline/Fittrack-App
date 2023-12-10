@@ -9,4 +9,5 @@ data class ExerciseDataPoint (
     val lbs: Int,
     val set: Int,
     val rep: Int,
+//    val Date: Date
     )

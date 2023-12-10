@@ -28,10 +28,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fittrack.ExerciseListViewModel
 import com.example.fittrack.models.Exercise
 
 @Composable
-fun WorkoutPlanScreen(allExercises: MutableList<Exercise>){
+fun WorkoutPlanScreen(allExercises: MutableList<Exercise>, exerciseList: ExerciseListViewModel){
+    //Use the exerciseList for adding new Exercises to the total list!!!
+    //When restarting the app so that the next we will have those new exercises.
+
     val viewModel: WorkoutPlanViewModel = viewModel()
     //For choosing to go on and start a new workout
     var popupClicked by remember {mutableStateOf(false)}
@@ -41,8 +45,14 @@ fun WorkoutPlanScreen(allExercises: MutableList<Exercise>){
     if(viewModel.currentlyWorkingOut){
         ActiveWorkoutScreen(allExercises = allExercises, {
             viewModel.popupClicked = false
-            viewModel.currentlyWorkingOut = false})
-    }else {
+            viewModel.currentlyWorkingOut = false}, viewModel)
+    }else if(viewModel.addingNewWorkout){
+        NewWorkoutScreen(allExercises = allExercises, {
+            viewModel.addingNewWorkout = false}, viewModel
+        )
+        
+    }
+    else{
         Log.d("", allExercises.toString())
         if ( viewModel.popupClicked) {
             WorkoutPlanPopup({  viewModel.popupClicked = false }, { viewModel.currentlyWorkingOut = true})
@@ -57,7 +67,7 @@ fun WorkoutPlanScreen(allExercises: MutableList<Exercise>){
 
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Row(
-                    modifier = Modifier.clickable {/* TODO  adding new workouts*/ },
+                    modifier = Modifier.clickable {viewModel.currentlyWorkingOut = true },
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(text = "Add New Workout")

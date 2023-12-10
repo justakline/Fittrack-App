@@ -2,6 +2,7 @@ package com.example.fittrack.WorkoutPlanScreen
 
 //package com.example.fittrack
 
+import WorkoutPlanViewModel
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,14 +47,11 @@ import com.example.fittrack.models.WorkoutData
 import java.util.Date
 
 @Composable
-fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: ()->Unit){
-    var viewModel: ActiveWorkoutScreenViewModel = viewModel()
-    var currentExercises by rememberSaveable { mutableStateOf(mutableListOf<Exercise>()) }
-    var addExerciseClicked by rememberSaveable { mutableStateOf(false) }
+fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: ()->Unit, viewModel: WorkoutPlanViewModel){
 
-    var workoutData by remember {
-        mutableStateOf(WorkoutData(mutableListOf<ExerciseData>(), Date()))
-    }
+
+
+
 
     if(viewModel.addExerciseClicked){
         ExerciseListPopup(allExercises = allExercises, exitPopup = { viewModel.addExerciseClicked = false },
@@ -101,7 +99,7 @@ fun ActiveWorkoutScreen(allExercises: MutableList<Exercise>, returnToWorkouts: (
 }
 
 @Composable
-fun Exercise(exercise: Exercise, viewModel: ActiveWorkoutScreenViewModel){
+fun Exercise(exercise: Exercise, viewModel: WorkoutPlanViewModel){
     var sets by remember { mutableStateOf(0)}
 
     Column {
@@ -145,7 +143,7 @@ fun Exercise(exercise: Exercise, viewModel: ActiveWorkoutScreenViewModel){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExerciseRow(setNumber: Int, onDelete: () -> Unit, viewModel: ActiveWorkoutScreenViewModel){
+fun ExerciseRow(setNumber: Int, onDelete: () -> Unit, viewModel: WorkoutPlanViewModel){
     var lbs by rememberSaveable { mutableStateOf(0) }
     var reps by rememberSaveable { mutableStateOf(0) }
     val default = 0
