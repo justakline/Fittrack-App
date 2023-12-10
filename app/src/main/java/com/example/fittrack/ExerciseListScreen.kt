@@ -71,12 +71,12 @@ fun AddNewWorkout(){
 fun SearchBar(searchValue:String, changeSearchValue: (String) -> Unit){
 
     TextField(
+        value = searchValue,
+        onValueChange = {i -> changeSearchValue(i)},
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
-            value = searchValue,
-            onValueChange = {i -> changeSearchValue(i)},
-            singleLine = true,
+        singleLine = true,
         //color = TextFieldDefaults.textFieldColors(
         //    containerColor = Red1
         //)
