@@ -26,12 +26,13 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.fittrack.MainActivity
 import com.example.fittrack.R
+import com.example.fittrack.Notification.NotificationHelper
 
 
 @Composable
 fun WorkoutPlanPopup(popupClicked: ()->Unit, workoutClicked: () -> Unit) {//JK
 
-    //Go on if they click Start Workout, go Back to WorkoutplanScreen if they click Go Bacl
+    //Go on if they click Start Workout, go Back to WorkoutplanScreen if they click Go Back
     AlertDialog(onDismissRequest = { /* Empty because logic is down below*/ }, confirmButton = { /*Logic is below*/ },//JK
 
         dismissButton = {
@@ -39,7 +40,7 @@ fun WorkoutPlanPopup(popupClicked: ()->Unit, workoutClicked: () -> Unit) {//JK
                 Text(text = "Go Back")//JK
 
             }
-            Button( modifier = Modifier.fillMaxWidth(), onClick = { workoutClicked(); Notification()  }) {//JK
+            Button( modifier = Modifier.fillMaxWidth(), onClick = { workoutClicked()}) {//JK
                 Text(text = "Start Workout")//JK
 
             }
@@ -49,5 +50,7 @@ fun WorkoutPlanPopup(popupClicked: ()->Unit, workoutClicked: () -> Unit) {//JK
 
 
 }
+
+
 
 

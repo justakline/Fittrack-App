@@ -9,7 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.fittrack.MainActivity
 
-class NotificationHelper(var co:Context,var msg:String) {
+class NotificationHelper(private var co: Context) {
     private val CHANNEL_ID = "message id"
     private val NOTIFICATION_ID = 123
     val intent = Intent(this.co, MainActivity::class.java)
@@ -18,7 +18,7 @@ class NotificationHelper(var co:Context,var msg:String) {
     fun Notification(){
         createNotificationHelper()
         val senInt = Intent(co,MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this.co, 1, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getActivity(this.co, 123, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this.co, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_media_play)
@@ -29,7 +29,7 @@ class NotificationHelper(var co:Context,var msg:String) {
 
     }
 
-    private fun createNotificationHelper(){
+    fun createNotificationHelper(){
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val name = CHANNEL_ID
             val descrip = "Channel descrip"
